@@ -1,0 +1,57 @@
+# ── Python ──────────────────────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+
+# ── Virtual environments ─────────────────────────────────────────────────────
+venv/
+.venv/
+.venv-wsl/
+env/
+.env/
+
+# ── Build / packaging ────────────────────────────────────────────────────────
+dist/
+build/
+*.egg-info/
+*.egg
+MANIFEST
+
+# ── Testing & coverage ───────────────────────────────────────────────────────
+.pytest_cache/
+.coverage
+coverage.xml
+htmlcov/
+
+# ── Linting / tooling caches ─────────────────────────────────────────────────
+.ruff_cache/
+.mypy_cache/
+
+# ── Database (spec 02) ───────────────────────────────────────────────────────
+# The DB lives in XDG_DATA_HOME by default, but guard against local overrides.
+*.db
+*.sqlite
+*.sqlite3
+*.db-wal
+*.db-shm
+
+# ── Config file (spec 01) ────────────────────────────────────────────────────
+# Contains the Groq API key; lives in XDG_CONFIG_HOME by default.
+config.toml
+
+# ── Secrets / environment ────────────────────────────────────────────────────
+.env
+.env.*
+*.key
+
+# ── OS noise ─────────────────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ── IDE / editor ─────────────────────────────────────────────────────────────
+.idea/
+.vscode/
+*.swp
+*.swo
