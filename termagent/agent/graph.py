@@ -34,7 +34,7 @@ def build_graph(
     """
     builder = StateGraph(AgentState)
 
-    builder.add_node("agent", make_agent_node(get_model))
+    builder.add_node("agent", make_agent_node(get_model, settings))
     builder.add_node("confirm", confirm_node)
     builder.add_node("execute", make_execute_node(settings))
 

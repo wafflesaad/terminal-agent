@@ -134,7 +134,7 @@ def test_groq_prompts_when_key_missing():
     settings = config.load()
     assert settings.groq_api_key is None
 
-    with patch("termagent.config.getpass.getpass", return_value="gsk_new") as mock_gp, patch(
+    with patch("builtins.input", return_value="gsk_new") as mock_gp, patch(
         "termagent.providers.groq.ChatGroq"
     ) as mock_cls:
         mock_cls.return_value = MagicMock()

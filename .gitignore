@@ -45,6 +45,14 @@ config.toml
 .env.*
 *.key
 
+# ── Logs ─────────────────────────────────────────────────────────────────────
+*.log
+logs/
+nohup.out
+
+# ── Python version managers ───────────────────────────────────────────────────
+.python-version
+
 # ── OS noise ─────────────────────────────────────────────────────────────────
 .DS_Store
 Thumbs.db
@@ -55,3 +63,6 @@ desktop.ini
 .vscode/
 *.swp
 *.swo
+*~
+*.bak
+*.orig

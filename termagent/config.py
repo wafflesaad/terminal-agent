@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-import getpass
 import os
 import tomllib
 from pathlib import Path
@@ -16,7 +15,7 @@ class Settings(BaseModel):
     default_provider: Literal["ollama", "groq"] = "ollama"
     ollama_model: str = "qwen3.5:9b"
     ollama_host: str = "http://localhost:11434"
-    groq_model: str = "llama-3.3-70b-versatile"
+    groq_model: str = "meta-llama/llama-4-scout-17b-16e-instruct"
     groq_api_key: str | None = None
     timeout_seconds: int = 60
     max_output_chars: int = 8000
@@ -63,7 +62,7 @@ def ensure_groq_key(settings: Settings) -> str:
     """Return the Groq API key, prompting and persisting it if not yet set."""
     if settings.groq_api_key:
         return settings.groq_api_key
-    key = getpass.getpass("Groq API key: ")
+    key = input("Groq API key: ")
     settings.groq_api_key = key
     save(settings)
     return key

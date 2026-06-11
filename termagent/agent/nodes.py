@@ -10,6 +10,7 @@ from langchain_core.tools import tool
 from langgraph.graph import END
 from langgraph.types import interrupt
 
+from termagent.agent.context import count_tokens, prepare_messages
 from termagent.agent.state import AgentState
 from termagent.tools.blocklist import check_blocked
 from termagent.tools.classify import Decision, classify
@@ -41,13 +42,18 @@ def run_shell(command: str) -> str:
     )
 
 
-def make_agent_node(get_model: Callable[[], "BaseChatModel"]) -> Callable:
+def make_agent_node(
+    get_model: Callable[[], "BaseChatModel"], settings: "Settings"
+) -> Callable:
     """Return an agent node that binds run_shell to the current model each turn."""
 
     def agent(state: "AgentState") -> dict:
         messages = list(state["messages"])
         if not messages or not isinstance(messages[0], SystemMessage):
             messages = [SystemMessage(content=_SYSTEM_PROMPT)] + messages
+        messages = prepare_messages(
+            messages, settings.context_token_budget, count_tokens
+        )
         model = get_model().bind_tools([run_shell])
         ai_msg = model.invoke(messages)
         return {"messages": [ai_msg]}
@@ -59,7 +65,11 @@ def make_gate_router(settings: "Settings") -> Callable:
     """Return a conditional-edge function that routes after the agent node."""
 
     def route_after_agent(state: AgentState) -> str:
-        last = state["messages"][-1]
+        messages = state["messages"]
+        if not messages:
+            # e.g. after /undo rewinds the whole thread — nothing to route.
+            return END
+        last = messages[-1]
         if not isinstance(last, AIMessage) or not last.tool_calls:
             return END
         # Process only the first tool call per cycle.

@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import builtins
 import os
 import stat
 from unittest.mock import patch
@@ -89,7 +90,7 @@ def test_ensure_groq_key_prompts_when_missing():
     assert settings.groq_api_key is None
 
     with patch(
-        "termagent.config.getpass.getpass", return_value="gsk_newkey"
+        "builtins.input", return_value="gsk_newkey"
     ) as mock_gp:
         key = config.ensure_groq_key(settings)
 
@@ -101,12 +102,12 @@ def test_ensure_groq_key_prompts_when_missing():
 def test_ensure_groq_key_persists_and_no_second_prompt():
     settings = config.load()
 
-    with patch("termagent.config.getpass.getpass", return_value="gsk_saved"):
+    with patch("builtins.input", return_value="gsk_saved"):
         config.ensure_groq_key(settings)
 
     # Reload from disk and ensure no prompt on second call
     reloaded = config.load()
-    with patch("termagent.config.getpass.getpass") as mock_gp:
+    with patch("builtins.input") as mock_gp:
         key = config.ensure_groq_key(reloaded)
 
     mock_gp.assert_not_called()
@@ -118,7 +119,7 @@ def test_ensure_groq_key_skips_prompt_when_key_present():
     config.save(settings)
 
     loaded = config.load()
-    with patch("termagent.config.getpass.getpass") as mock_gp:
+    with patch("builtins.input") as mock_gp:
         key = config.ensure_groq_key(loaded)
 
     mock_gp.assert_not_called()
